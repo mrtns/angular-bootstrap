@@ -19,7 +19,8 @@ module.exports = function( grunt ) {
     coffee: {
       compile: {
         files: {
-          'temp/scripts/*.js': 'app/scripts/**/*.coffee' 
+          'app/scripts/*.js': 'app/scripts/**/*.coffee',
+          'test/spec/*.js': 'test/spec/**/*.coffee'
         },
         options: {
           basePath: 'app/scripts'
@@ -46,11 +47,6 @@ module.exports = function( grunt ) {
       dest: ''
     },
 
-    // headless testing through PhantomJS
-    mocha: {
-      all: ['test/**/*.html']
-    },
-
     // default watch configuration
     watch: {
       coffee: {
@@ -68,6 +64,7 @@ module.exports = function( grunt ) {
           'app/*.html',
           'app/styles/**/*.css',
           'app/scripts/**/*.js',
+          'app/views/**/*.html',
           'app/images/**/*'
         ],
         tasks: 'reload'
@@ -101,7 +98,7 @@ module.exports = function( grunt ) {
         browser: true
       },
       globals: {
-        jQuery: true
+        angular: true
       }
     },
 
@@ -183,7 +180,12 @@ module.exports = function( grunt ) {
     }
   });
 
-  // Alias the `test` task to run the `mocha` task instead
-  grunt.registerTask('test', 'server:phantom mocha');
-
+  // Alias the `test` task to run `testacular` instead
+  grunt.registerTask('test', 'run the testacular test driver', function () {
+    var done = this.async();
+    require('child_process').exec('testacular start --single-run', function (err, stdout) {
+      grunt.log.write(stdout);
+      done(err);
+    });
+  });
 };
