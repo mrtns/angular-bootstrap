@@ -7,6 +7,10 @@ var angularBootstrapApp = angular.module('angularBootstrapApp', [])
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/d3', {
+        templateUrl: 'views/d3.html',
+        controller: 'd3Ctrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
