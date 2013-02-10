@@ -23,6 +23,11 @@ angularBootstrapApp.controller('d3Ctrl', function($scope) {
 	    .x(x2)
 	    .on("brush", brush);
 
+	var line = d3.svg.line()
+	    .x(function(d) { return x(d.timeInterval); })
+	    .y(function(d) { return y(d.totalMessages); })
+	    .interpolate("monotone");
+
 	var area = d3.svg.area()
 	    .interpolate("monotone")
 	    .x(function(d) { return x(d.timeInterval); })
@@ -68,8 +73,9 @@ angularBootstrapApp.controller('d3Ctrl', function($scope) {
 
 	  focus.append("path")
 	      .data([data])
+	      .attr("class", "line")
 	      .attr("clip-path", "url(#clip)")
-	      .attr("d", area);
+	      .attr("d", line);
 
 	  focus.append("g")
 	      .attr("class", "x axis")
@@ -99,7 +105,7 @@ angularBootstrapApp.controller('d3Ctrl', function($scope) {
 
 	function brush() {
 	  x.domain(brush.empty() ? x2.domain() : brush.extent());
-	  focus.select("path").attr("d", area);
+	  focus.select("path").attr("d", line);
 	  focus.select(".x.axis").call(xAxis);
 	}
 
