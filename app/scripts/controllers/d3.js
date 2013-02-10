@@ -67,7 +67,7 @@ angularBootstrapApp.controller('d3Ctrl', function($scope) {
 	  });
 
 	  x.domain(d3.extent(data.map(function(d) { return d.timeInterval; })));
-	  y.domain([0, d3.max(data.map(function(d) { return d.totalMessages; }))]);
+	  y.domain([-5, d3.max(data.map(function(d) { return d.totalMessages; })) * 1.10]);
 	  x2.domain(x.domain());
 	  y2.domain(y.domain());
 
