@@ -31,7 +31,6 @@ angularBootstrapApp.controller('d3Ctrl', function($scope) {
 	var area = d3.svg.area()
 	    .interpolate("monotone")
 	    .x(function(d) { return x(d.timeInterval); })
-	    .y0(height)
 	    .y1(function(d) { return y(d.totalMessages); });
 
 	var area2 = d3.svg.area()
@@ -46,7 +45,7 @@ angularBootstrapApp.controller('d3Ctrl', function($scope) {
 
 	svg.append("defs").append("clipPath")
 	    .attr("id", "clip")
-	  .append("rect")
+	    .append("rect")
 	    .attr("width", width)
 	    .attr("height", height);
 
@@ -64,15 +63,42 @@ angularBootstrapApp.controller('d3Ctrl', function($scope) {
 	  data.forEach(function(d) {
 	    d.timeInterval = new Date(d.timeInterval);
 	    d.totalMessages = +d.totalMessages;
+	    d.totalMessages2 = (+d.totalMessages) * (Math.random() * 2);
 	  });
 
 	  x.domain(d3.extent(data.map(function(d) { return d.timeInterval; })));
-	  y.domain([-5, d3.max(data.map(function(d) { return d.totalMessages; })) * 1.10]);
+	  y.domain([0, d3.max(data.map(function(d) { return d.totalMessages2; })) * 1.10]);
 	  x2.domain(x.domain());
 	  y2.domain(y.domain());
 
+focus.datum(data);
+
+  focus.append("clipPath")
+  .attr("clip-path", "url(#clip)")
+      .attr("id", "clip-below")
+      .append("path")
+      .attr("d", area.y0(height));
+
+  focus.append("clipPath")
+  .attr("clip-path", "url(#clip)")
+      .attr("id", "clip-above")
+      .append("path")
+      .attr("d", area.y0(0));
+
+  focus.append("path")
+      .attr("class", "area lessthan")
+      .attr("id", "area-lessthan")
+      .attr("clip-path", "url(#clip-above)")
+      .attr("d", area.y0(function(d) { return y(d.totalMessages2); }));
+
+  focus.append("path")
+      .attr("class", "area greaterthan")
+      .attr("id", "area-greaterthan")
+      .attr("clip-path", "url(#clip-below)")
+      .attr("d", area);
+
+
 	  focus.append("path")
-	      .data([data])
 	      .attr("class", "line")
 	      .attr("clip-path", "url(#clip)")
 	      .attr("d", line);
@@ -105,7 +131,11 @@ angularBootstrapApp.controller('d3Ctrl', function($scope) {
 
 	function brush() {
 	  x.domain(brush.empty() ? x2.domain() : brush.extent());
-	  focus.select("path").attr("d", line);
+	  focus.select("#clip-below>path").attr("d", area.y0(height));
+	  focus.select("#clip-above>path").attr("d", area.y0(0));
+	  focus.select("#area-lessthan").attr("d", area.y0(function(d) { return y(d.totalMessages2); }));
+	  focus.select("#area-greaterthan").attr("d", area);
+	  focus.select("path.line").attr("d", line);
 	  focus.select(".x.axis").call(xAxis);
 	}
 

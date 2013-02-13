@@ -24,6 +24,14 @@ path {
   stroke-width: 1.5px;
 }
 
+.area.greaterthan {
+  fill: rgb(145,207,96);
+}
+
+.area.lessthan {
+  fill: rgb(252,141,89);
+}
+
 .brush .extent {
   stroke: #fff;
   fill-opacity: .125;
