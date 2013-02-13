@@ -14,13 +14,13 @@ path {
   shape-rendering: crispEdges;
 }
 
-.y.axis path {
+.x.axis path {
   display: none;
 }
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: #3B5998;
   stroke-width: 1.5px;
 }
 
